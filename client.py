@@ -26,8 +26,7 @@ class LegalClauseCrossReferenceResolver:
             refs = set()
             for m in self.ref_pattern.finditer(text):
                 full_ref = f"Section {m.group(1)}"
-                if full_ref != cid:
-                    refs.add(full_ref)
+                refs.add(full_ref)
             graph[cid] = sorted(list(refs))
         return graph
 
@@ -43,7 +42,7 @@ class LegalClauseCrossReferenceResolver:
                 if neighbor not in visited:
                     dfs(neighbor, current_path + [neighbor])
                 elif neighbor in rec_stack:
-                    cycle = current_path + [neighbor]
+                    cycle = current_path[current_path.index(neighbor):] + [neighbor]
                     cycles.append(cycle)
             rec_stack.remove(node)
 
@@ -61,11 +60,14 @@ class LegalClauseCrossReferenceResolver:
         expanded_text = raw_text
         terms_substituted = []
 
-        for term, definition in defined_terms.items():
-            pattern = re.compile(r'\b' + re.escape(term) + r'\b')
-            if pattern.search(expanded_text):
-                expanded_text = pattern.sub(f"[{term} (def: {definition})]", expanded_text)
-                terms_substituted.append(term)
+        if defined_terms:
+            pattern = re.compile(r'\b(?:' + '|'.join(re.escape(t) for t in sorted(defined_terms, key=len, reverse=True) if t) + r')\b')
+            def replace(match):
+                term = match.group(0)
+                if term not in terms_substituted:
+                    terms_substituted.append(term)
+                return f"[{term} (def: {defined_terms[term]})]"
+            expanded_text = pattern.sub(replace, raw_text)
 
         return {
             "clause_id": clause_id,

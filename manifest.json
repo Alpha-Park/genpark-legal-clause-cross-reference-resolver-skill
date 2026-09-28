@@ -1,0 +1,34 @@
+{
+  "manifest_version": "0.3",
+  "name": "genpark-clause-references",
+  "version": "1.0.1",
+  "description": "Extract English defined terms and explicit numbered references from supplied contract text; inspect dependency cycles. Regex heuristics, not legal analysis.",
+  "author": {
+    "name": "GenPark AI Engineering"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alpha-Park/genpark-legal-clause-cross-reference-resolver-skill"
+  },
+  "server": {
+    "type": "python",
+    "entry_point": "mcp_server.py",
+    "mcp_config": {
+      "command": "python",
+      "args": [
+        "${__dirname}/mcp_server.py"
+      ]
+    }
+  },
+  "compatibility": {
+    "platforms": [
+      "win32",
+      "darwin",
+      "linux"
+    ],
+    "runtimes": {
+      "python": ">=3.9"
+    }
+  }
+}

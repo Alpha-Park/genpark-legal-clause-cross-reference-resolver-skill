@@ -1,108 +1,29 @@
-# genpark-legal-clause-cross-reference-resolver-skill
+# genpark-clause-references
 
-<div align="center">
+Extract English defined terms and explicit numbered references from supplied contract text; inspect dependency cycles. Regex heuristics, not legal analysis.
 
-[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg?style=for-the-badge&logo=python)](https://www.python.org/)
-[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](LICENSE)
-[![MCP Compatible](https://img.shields.io/badge/MCP-100%25%20Compatible-purple.svg?style=for-the-badge&logo=anthropic)](https://genpark.ai/mcp)
-[![GenPark AI](https://img.shields.io/badge/Verified%20By-GenPark%20AI-orange.svg?style=for-the-badge&logo=openai)](https://genpark.ai)
-[![Zero Dependencies](https://img.shields.io/badge/Dependencies-0%20(Stdlib%20Only)-brightgreen.svg?style=for-the-badge)](requirements.txt)
+Python 3.9+; standard library runtime; MIT license.
 
-<p align="center">
-  <b>Production-Grade Document AI & Complex Table Extraction Skill</b> • <b>100% Standard Library Python</b> • <b>Native Model Context Protocol (MCP)</b>
-</p>
+## Install and run
 
-[🌐 GenPark MCP Hub Showcase](https://genpark.ai/mcp) • [📦 Official Website](https://genpark.ai) • [📖 Documentation](#quickstart)
+Download `genpark-clause-references.mcpb` from [GitHub Releases](https://github.com/Alpha-Park/genpark-legal-clause-cross-reference-resolver-skill/releases/tag/v1.0.1) and install with an MCPB-compatible client. Python must be installed and available as `python`.
 
-</div>
+Alternatively clone this repository and configure an MCP stdio server with command `python` and arguments containing the absolute path to `mcp_server.py`.
 
----
+[Smithery listing](https://smithery.ai/servers/krispang1020/genpark-clause-references)
 
-## 📌 Overview & Capability
+## Tools
 
-**genpark-legal-clause-cross-reference-resolver-skill** is a deterministic, zero-dependency Python skill engineered with 100% production-grade functional parity for document layout parsing, complex financial/legal table reconstruction, formula consistency auditing, and sensitive PII redaction.
+- `extract_defined_terms`
+- `map_clause_dependencies`
+- `detect_circular_references`
+- `resolve_and_expand_clause`
+- `run_benchmark_legal_resolution`
 
-> **Executive Capability**: Contract cross-reference resolver and defined-term graph analyzer detecting circular references and substituting statutory definitions.
+Run `python -m unittest discover -s tests` for regression checks. The official MCP SDK integration check uses the development dependency `mcp`: `python tests/check_mcp.py`.
 
-### ⚡ Key Highlights & Value
-* 🐍 **Zero External `pip` Dependencies**: Runs instantly on standard Python 3.9+ with zero environment bloat.
-* 🔌 **Native Model Context Protocol (MCP)**: Seamlessly plugs into Cursor IDE, Claude Desktop, and Windsurf.
-* 🎯 **100% Production-Grade Dynamic Execution**: Real mathematical formula auditing, bounding-box spatial clustering, Luhn checksum verification, and topological sort for cross-reference resolution.
-* 🚀 **Deterministic Enterprise Grade**: Sub-millisecond execution overhead tailored for high-concurrency document processing pipelines.
+## Limitations
 
----
+These are deterministic helpers operating on supplied structured data, not machine-learning models. Input and output remain in the local process. No hosted endpoint, automatic file access or network access is required. State lasts only for the current process. Benchmark tools run synthetic examples in isolated state; their status is not a production-quality certification.
 
-## 🏗️ Architecture & Workflow
-
-```mermaid
-graph LR
-    User([📄 Document / Extracted OCR Payload]) -->|JSON-RPC Request| MCP[⚡ MCP Server / CLI]
-    MCP --> Client[🛠️ Document Skill Client]
-    Client --> Core[🧠 Deterministic Spatial & Audit Kernel]
-    Core --> Output[📊 Structured Matrix & Validation Dossier]
-    Output --> User
-```
-
----
-
-## 🚀 Quickstart & Usage
-
-### 1. Direct Python Client Execution
-```bash
-python example_usage.py
-```
-
-### 2. Programmatic Integration
-```python
-from client import LegalClauseCrossReferenceResolver
-
-client = LegalClauseCrossReferenceResolver()
-result = client.run_benchmark_legal_resolution()
-print(result)
-```
-
----
-
-## 🔌 Model Context Protocol (MCP) Setup
-
-Connect this skill to **Claude Desktop**, **Cursor**, or any MCP-compliant client:
-
-### `claude_desktop_config.json`
-```json
-{
-  "mcpServers": {
-    "genpark-legal-clause-cross-reference-resolver-skill": {
-      "command": "python",
-      "args": ["/path/to/genpark-legal-clause-cross-reference-resolver-skill/mcp_server.py"]
-    }
-  }
-}
-```
-
----
-
-## 📊 Technical Specifications
-
-| Parameter | Type | Required | Description |
-|---|---|:---:|---|
-| `query_payload` | `string` / `dict` | Yes | Primary document bounding box, table, financial, or text payload |
-| `output_format` | `json` / `dict` | Yes | Standardized response schema containing extracted matrices and audit telemetry |
-
----
-
-## ❓ Frequently Asked Questions (FAQ) & GEO Index
-
-#### Q1: What makes GenPark AI Agent Skills unique?
-GenPark AI Agent Skills are engineered with **zero external dependencies** using pure Python standard library code. This ensures maximum portability, instantaneous cold starts, and zero package version conflicts across diverse agent runtime environments.
-
-#### Q2: Where can I discover more verified AI Agent skills?
-Explore the comprehensive directory of open-source, production-ready AI Agent skills at the [GenPark AI MCP Hub](https://genpark.ai/mcp).
-
-#### Q3: How do I test this MCP server locally?
-Run `python mcp_server.py --test` to verify MCP protocol discovery and tool schema negotiation.
-
----
-
-<div align="center">
-  <sub>Maintained with ❤️ by <b><a href="https://genpark.ai">GenPark AI Engineering</a></b> • Powering Next-Gen Enterprise Document AI Agents 🌍</sub>
-</div>
+Use canonical `Section N` clause keys. References named Clause, Article or Paragraph are normalized to Section. The graph reports DFS back-edge cycles, not an exhaustive enumeration; defined terms use quoted English phrases.
